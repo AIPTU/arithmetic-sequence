@@ -1,0 +1,156 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(245, 245, 245, 1) 100%
+  );
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  padding: 3rem;
+  text-align: center;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.main-menu,
+.sequence-page {
+  padding: 3rem;
+  animation: slideIn 0.5s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+button,
+input {
+  font-size: 1.3rem;
+  padding: 0.8rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  background-color: #2962ff;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  outline: none;
+}
+
+.menu-button,
+.back-button {
+  margin: 1rem;
+}
+
+.menu-button:hover,
+.back-button:hover {
+  background-color: #0057b2;
+  transform: scale(1.05);
+}
+
+.menu-button:focus,
+.back-button:focus {
+  box-shadow: 0 0 0 2px #2962ff;
+}
+
+.sequence-form {
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sequence-form > * {
+  margin-bottom: 1rem;
+}
+
+.sequence-form input {
+  padding: 1rem;
+  width: 100%;
+  border: 1px solid #2962ff;
+  border-radius: 8px;
+  outline: none;
+  background-color: white; /* Updated background color to white */
+  animation: inputAnimation 0.5s ease-in-out;
+}
+
+.sequence-form input:hover {
+  border-color: #0057b2;
+  box-shadow: 0 0 0 2px #2962ff;
+}
+
+.sequence-form input:focus {
+  border-color: #2962ff;
+  box-shadow: 0 0 0 2px #2962ff;
+}
+
+@keyframes inputAnimation {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  button,
+  input {
+    font-size: 1.2rem;
+  }
+
+  .menu-button,
+  .back-button {
+    margin: 0.5rem;
+  }
+}
+
+@media screen and (orientation: landscape) and (max-width: 1024px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+@media screen and (orientation: portrait) and (max-width: 768px) {
+  .container {
+    max-width: 100%;
+  }
+}
+
+@media screen and (min-width: 1024px) and (max-width: 1280px) {
+  .container {
+    max-width: 800px;
+  }
+}
