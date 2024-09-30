@@ -89,7 +89,14 @@ const App = () => {
     }
   };
 
-  return <div className="container">{renderPage()}</div>;
+  return (
+    <div className="container">
+      {renderPage()}
+      <footer className="footer">
+        &copy; {new Date().getFullYear()} AIPTU. All rights reserved.
+      </footer>
+    </div>
+  );
 };
 
 const Button = ({ children, type, onClick }) => (

@@ -21,12 +21,18 @@ const SolveMissing = ({ sequenceType, goBack }) => {
         throw new Error("Input sequence must have at least two terms.");
       }
 
-      if (
-        sequenceType !== "alphabet" &&
-        inputArray.some((x) => isNaN(x) && x !== null)
-      ) {
+      const hasNonNumber = inputArray.some(
+        (x) => x !== null && sequenceType !== "alphabet" && isNaN(x)
+      );
+      const hasNonLetter = inputArray.some(
+        (x) =>
+          x !== null && sequenceType === "alphabet" && !/^[a-zA-Z]+$/.test(x)
+      );
+      if (hasNonNumber || hasNonLetter) {
         throw new Error(
-          "Only numbers are allowed for arithmetic or geometric sequences."
+          `Only ${
+            sequenceType === "alphabet" ? "letters" : "numbers"
+          } are allowed for ${sequenceType} sequences.`
         );
       }
 
