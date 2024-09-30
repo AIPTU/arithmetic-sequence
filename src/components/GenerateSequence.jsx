@@ -57,14 +57,11 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
   };
 
   const handleCopy = () => {
-    const textArea = document.createElement("textarea");
     const text = generatedSequence.join(", ");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand("copy");
-    textArea.remove();
-    alert("Copied to clipboard");
+    navigator.clipboard
+      .writeText(text)
+      .then(() => alert("Copied to clipboard"))
+      .catch((err) => console.error("Failed to copy text: ", err));
   };
 
   return (
@@ -88,6 +85,7 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
             placeholder={sequenceType === "alphabet" ? "e.g. A" : "e.g. 1"}
           />
         </div>
+
         <div>
           <label>
             {sequenceType === "arithmetic"
@@ -114,6 +112,7 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
             placeholder="e.g. 5"
           />
         </div>
+
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { motion } from "framer-motion";
 import React, { useState } from "react";
@@ -45,62 +46,44 @@ const App = () => {
             >
               Sequence Solver
             </motion.h1>
-            <div className="button-group">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="menu-button"
+            <ButtonGroup>
+              <Button
+                type="arithmetic"
                 onClick={() => handleNavigation("generate", "arithmetic")}
               >
                 Generate Arithmetic Sequence
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="menu-button"
+              </Button>
+              <Button
+                type="arithmetic"
                 onClick={() => handleNavigation("solve", "arithmetic")}
               >
                 Solve Missing Arithmetic Terms
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="menu-button"
+              </Button>
+              <Button
+                type="geometric"
                 onClick={() => handleNavigation("generate", "geometric")}
               >
                 Generate Geometric Sequence
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="menu-button"
+              </Button>
+              <Button
+                type="geometric"
                 onClick={() => handleNavigation("solve", "geometric")}
               >
                 Solve Missing Geometric Terms
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="menu-button"
+              </Button>
+              <Button
+                type="alphabet"
                 onClick={() => handleNavigation("generate", "alphabet")}
               >
                 Generate Alphabet Sequence
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.3 }}
-                className="menu-button"
+              </Button>
+              <Button
+                type="alphabet"
                 onClick={() => handleNavigation("solve", "alphabet")}
               >
                 Solve Missing Alphabet Sequence
-              </motion.button>
-            </div>
+              </Button>
+            </ButtonGroup>
           </motion.div>
         );
     }
@@ -108,5 +91,21 @@ const App = () => {
 
   return <div className="container">{renderPage()}</div>;
 };
+
+const Button = ({ children, type, onClick }) => (
+  <motion.button
+    whileHover={{ scale: 1.1 }}
+    whileTap={{ scale: 0.9 }}
+    transition={{ duration: 0.3 }}
+    className={`menu-button ${type}`}
+    onClick={onClick}
+  >
+    {children}
+  </motion.button>
+);
+
+const ButtonGroup = ({ children }) => (
+  <div className="button-group">{children}</div>
+);
 
 export default App;

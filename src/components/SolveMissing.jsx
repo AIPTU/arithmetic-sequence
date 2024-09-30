@@ -7,15 +7,29 @@ const SolveMissing = ({ sequenceType, goBack }) => {
   const [inputSequence, setInputSequence] = useState("");
   const [solvedSequence, setSolvedSequence] = useState([]);
   const [details, setDetails] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMessage("");
     try {
       const inputArray = inputSequence
         .split(",")
         .map((x) => (x.trim() === "..." ? null : x.trim()));
+
       if (inputArray.length < 2) {
-        throw new Error("Input sequence must have at least two terms");
+        throw new Error("Input sequence must have at least two terms.");
       }
+
+      if (
+        sequenceType !== "alphabet" &&
+        inputArray.some((x) => isNaN(x) && x !== null)
+      ) {
+        throw new Error(
+          "Only numbers are allowed for arithmetic or geometric sequences."
+        );
+      }
+
       const { solvedArray, details: detailsText } = solveSequence(
         inputArray,
         sequenceType
@@ -23,19 +37,18 @@ const SolveMissing = ({ sequenceType, goBack }) => {
       setSolvedSequence(solvedArray);
       setDetails(detailsText);
     } catch (error) {
-      alert(error.message);
+      setErrorMessage(error.message);
     }
   };
 
   const solveSequence = (sequence, type) => {
     let solvedSequence = [...sequence];
-    const missingIndex = sequence.indexOf(null);
 
     switch (type) {
       case "arithmetic": {
         const diff = findArithmeticDifference(sequence);
         if (diff === null) {
-          throw new Error("Could not find common difference");
+          throw new Error("Could not find a common difference.");
         }
         solvedSequence = fillMissingTermArithmetic(solvedSequence, diff);
         return {
@@ -47,7 +60,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
       case "geometric": {
         const ratio = findGeometricRatio(sequence);
         if (ratio === null) {
-          throw new Error("Could not find common ratio");
+          throw new Error("Could not find a common ratio.");
         }
         solvedSequence = fillMissingTermGeometric(solvedSequence, ratio);
         return {
@@ -59,7 +72,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
       case "alphabet": {
         const diff = findAlphabetDifference(solvedSequence);
         if (diff === null) {
-          throw new Error("Could not find common difference");
+          throw new Error("Could not find a common difference.");
         }
         solvedSequence = fillMissingTermAlphabet(solvedSequence);
         return {
@@ -67,8 +80,9 @@ const SolveMissing = ({ sequenceType, goBack }) => {
           details: `Common difference: ${diff}`,
         };
       }
+
       default:
-        throw new Error("Unknown sequence type");
+        throw new Error("Unknown sequence type.");
     }
   };
 
@@ -84,7 +98,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
   const fillMissingTermArithmetic = (sequence, diff) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] === null) {
-        sequence[i] = sequence[i - 1] + diff;
+        sequence[i] = parseFloat(sequence[i - 1]) + diff;
       }
     }
     return sequence;
@@ -102,7 +116,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
   const fillMissingTermGeometric = (sequence, ratio) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] === null) {
-        sequence[i] = sequence[i - 1] * ratio;
+        sequence[i] = parseFloat(sequence[i - 1]) * ratio;
       }
     }
     return sequence;
@@ -121,22 +135,20 @@ const SolveMissing = ({ sequenceType, goBack }) => {
     const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] === null) {
+        const prevChar = sequence[i - 1].toUpperCase();
         sequence[i] =
-          alphabet[(alphabet.indexOf(sequence[i - 1]) + 1) % alphabet.length];
+          alphabet[(alphabet.indexOf(prevChar) + 1) % alphabet.length];
       }
     }
     return sequence;
   };
 
   const handleCopy = () => {
-    const textArea = document.createElement("textarea");
     const text = solvedSequence.join(", ");
-    textArea.value = text;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand("copy");
-    textArea.remove();
-    alert("Copied to clipboard");
+    navigator.clipboard
+      .writeText(text)
+      .then(() => alert("Copied to clipboard"))
+      .catch((err) => console.error("Failed to copy text: ", err));
   };
 
   const placeholder = {
@@ -166,6 +178,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
             placeholder={placeholder}
           />
         </div>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -186,17 +199,17 @@ const SolveMissing = ({ sequenceType, goBack }) => {
             ))}
           </motion.ul>
           <p>{details}</p>
+          <motion.button
+            className="back-button"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            transition={{ duration: 0.3 }}
+            onClick={handleCopy}
+          >
+            Copy to Clipboard
+          </motion.button>
         </div>
       )}
-      <motion.button
-        className="back-button"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        transition={{ duration: 0.3 }}
-        onClick={handleCopy}
-      >
-        Copy to Clipboard
-      </motion.button>
       <motion.button
         className="back-button"
         whileHover={{ scale: 1.1 }}
