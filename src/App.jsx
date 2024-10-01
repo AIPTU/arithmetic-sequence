@@ -44,44 +44,44 @@ const App = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              Sequence Solver
+              Urutan Aritmatika
             </motion.h1>
             <ButtonGroup>
               <Button
                 type="arithmetic"
                 onClick={() => handleNavigation("generate", "arithmetic")}
               >
-                Generate Arithmetic Sequence
+                Membuat Urutan Aritmatika
               </Button>
               <Button
                 type="arithmetic"
                 onClick={() => handleNavigation("solve", "arithmetic")}
               >
-                Solve Missing Arithmetic Terms
+                Menyelesaikan Urutan Aritmatika yang Hilang
               </Button>
               <Button
                 type="geometric"
                 onClick={() => handleNavigation("generate", "geometric")}
               >
-                Generate Geometric Sequence
+                Membuat Urutan Geometri
               </Button>
               <Button
                 type="geometric"
                 onClick={() => handleNavigation("solve", "geometric")}
               >
-                Solve Missing Geometric Terms
+                Menyelesaikan Urutan Geometri yang Hilang
               </Button>
               <Button
                 type="alphabet"
                 onClick={() => handleNavigation("generate", "alphabet")}
               >
-                Generate Alphabet Sequence
+                Membuat Urutan Abjad
               </Button>
               <Button
                 type="alphabet"
                 onClick={() => handleNavigation("solve", "alphabet")}
               >
-                Solve Missing Alphabet Sequence
+                Menyelesaikan Urutan Abjad yang Hilang
               </Button>
             </ButtonGroup>
           </motion.div>

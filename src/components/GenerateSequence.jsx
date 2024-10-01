@@ -51,7 +51,7 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
         break;
       }
       default:
-        throw new Error("Unknown sequence type");
+        throw new Error("Tipe urutan tidak diketahui");
     }
     return result;
   };
@@ -60,8 +60,8 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
     const text = generatedSequence.join(", ");
     navigator.clipboard
       .writeText(text)
-      .then(() => alert("Copied to clipboard"))
-      .catch((err) => console.error("Failed to copy text: ", err));
+      .then(() => alert("Disalin ke clipboard"))
+      .catch((err) => console.error("Gagal menyalin teks: ", err));
   };
 
   return (
@@ -71,45 +71,45 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <motion.h2>{`Generate ${
+      <motion.h2>{`Buat ${
         sequenceType.charAt(0).toUpperCase() + sequenceType.slice(1)
-      } Sequence`}</motion.h2>
+      } Urutan`}</motion.h2>
       <form onSubmit={handleSubmit} className="sequence-form">
         <div>
-          <label>Initial Term:</label>
+          <label>Suku Awal:</label>
           <input
             type={sequenceType === "alphabet" ? "text" : "number"}
             value={initialTerm}
             onChange={(event) => setInitialTerm(event.target.value)}
             required
-            placeholder={sequenceType === "alphabet" ? "e.g. A" : "e.g. 1"}
+            placeholder={sequenceType === "alphabet" ? "contoh: A" : "contoh: 1"}
           />
         </div>
 
         <div>
           <label>
             {sequenceType === "arithmetic"
-              ? "Common Difference"
+              ? "Selisih Umum"
               : sequenceType === "geometric"
-              ? "Common Ratio"
-              : "Step"}
+              ? "Rasio Umum"
+              : "Langkah"}
           </label>
           <input
             type="number"
             value={commonDifferenceOrRatio}
             onChange={(event) => setCommonDifferenceOrRatio(event.target.value)}
             required
-            placeholder="e.g. 2"
+            placeholder="contoh: 2"
           />
         </div>
         <div>
-          <label>Number of Terms:</label>
+          <label>Jumlah Suku:</label>
           <input
             type="number"
             value={numberOfTerms}
             onChange={(event) => setNumberOfTerms(event.target.value)}
             required
-            placeholder="e.g. 5"
+            placeholder="contoh: 5"
           />
         </div>
 
@@ -119,12 +119,12 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
           transition={{ duration: 0.3 }}
           type="submit"
         >
-          Generate
+          Buat
         </motion.button>
       </form>
       {generatedSequence.length > 0 && (
         <div>
-          <h3>Generated Sequence:</h3>
+          <h3>Urutan yang Dihasilkan:</h3>
           <motion.ul>
             {generatedSequence.map((num, index) => (
               <motion.li key={index} whileHover={{ scale: 1.1 }}>
@@ -139,7 +139,7 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
             transition={{ duration: 0.3 }}
             onClick={handleCopy}
           >
-            Copy to Clipboard
+            Salin ke Clipboard
           </motion.button>
         </div>
       )}
@@ -150,7 +150,7 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
         transition={{ duration: 0.3 }}
         onClick={goBack}
       >
-        Back
+        Kembali
       </motion.button>
     </motion.div>
   );
