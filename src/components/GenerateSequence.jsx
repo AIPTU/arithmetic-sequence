@@ -150,7 +150,7 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
         transition={{ duration: 0.3 }}
         onClick={goBack}
       >
-        Back to Main Menu
+        Back
       </motion.button>
     </motion.div>
   );

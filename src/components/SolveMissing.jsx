@@ -9,9 +9,32 @@ const SolveMissing = ({ sequenceType, goBack }) => {
   const [details, setDetails] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const validateSequence = (sequence, type) => {
+    const isNumeric = (x) => !isNaN(parseFloat(x)) && isFinite(x);
+    const isAlphabetic = (x) => /^[a-zA-Z]+$/.test(x);
+
+    const hasInvalidNumber = sequence.some(
+      (x) => x !== null && type !== "alphabet" && !isNumeric(x)
+    );
+    const hasInvalidLetter = sequence.some(
+      (x) => x !== null && type === "alphabet" && !isAlphabetic(x)
+    );
+
+    if (hasInvalidNumber || hasInvalidLetter) {
+      throw new Error(
+        `Invalid input: Only ${
+          type === "alphabet" ? "letters" : "numbers"
+        } are allowed for ${type} sequences.`
+      );
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMessage("");
+    setDetails("");
+    setSolvedSequence([]);
+
     try {
       const inputArray = inputSequence
         .split(",")
@@ -21,20 +44,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
         throw new Error("Input sequence must have at least two terms.");
       }
 
-      const hasNonNumber = inputArray.some(
-        (x) => x !== null && sequenceType !== "alphabet" && isNaN(x)
-      );
-      const hasNonLetter = inputArray.some(
-        (x) =>
-          x !== null && sequenceType === "alphabet" && !/^[a-zA-Z]+$/.test(x)
-      );
-      if (hasNonNumber || hasNonLetter) {
-        throw new Error(
-          `Only ${
-            sequenceType === "alphabet" ? "letters" : "numbers"
-          } are allowed for ${sequenceType} sequences.`
-        );
-      }
+      validateSequence(inputArray, sequenceType);
 
       const { solvedArray, details: detailsText } = solveSequence(
         inputArray,
@@ -52,38 +62,38 @@ const SolveMissing = ({ sequenceType, goBack }) => {
 
     switch (type) {
       case "arithmetic": {
-        const diff = findArithmeticDifference(sequence);
+        const diff = findArithmeticDifference(solvedSequence);
         if (diff === null) {
           throw new Error("Could not find a common difference.");
         }
-        solvedSequence = fillMissingTermArithmetic(solvedSequence, diff);
+        solvedSequence = fillMissingTermsArithmetic(solvedSequence, diff);
         return {
           solvedArray: solvedSequence,
-          details: `Common difference: ${diff}`,
+          details: `Common difference is ${diff}.`,
         };
       }
 
       case "geometric": {
-        const ratio = findGeometricRatio(sequence);
+        const ratio = findGeometricRatio(solvedSequence);
         if (ratio === null) {
           throw new Error("Could not find a common ratio.");
         }
-        solvedSequence = fillMissingTermGeometric(solvedSequence, ratio);
+        solvedSequence = fillMissingTermsGeometric(solvedSequence, ratio);
         return {
           solvedArray: solvedSequence,
-          details: `Common ratio: ${ratio}`,
+          details: `Common ratio is ${ratio}.`,
         };
       }
 
       case "alphabet": {
         const diff = findAlphabetDifference(solvedSequence);
         if (diff === null) {
-          throw new Error("Could not find a common difference.");
+          throw new Error("Could not find a common letter difference.");
         }
-        solvedSequence = fillMissingTermAlphabet(solvedSequence);
+        solvedSequence = fillMissingTermsAlphabet(solvedSequence, diff);
         return {
           solvedArray: solvedSequence,
-          details: `Common difference: ${diff}`,
+          details: `Common letter difference is ${diff}.`,
         };
       }
 
@@ -101,7 +111,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
     return null;
   };
 
-  const fillMissingTermArithmetic = (sequence, diff) => {
+  const fillMissingTermsArithmetic = (sequence, diff) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] === null) {
         sequence[i] = parseFloat(sequence[i - 1]) + diff;
@@ -119,7 +129,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
     return null;
   };
 
-  const fillMissingTermGeometric = (sequence, ratio) => {
+  const fillMissingTermsGeometric = (sequence, ratio) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] === null) {
         sequence[i] = parseFloat(sequence[i - 1]) * ratio;
@@ -137,13 +147,11 @@ const SolveMissing = ({ sequenceType, goBack }) => {
     return null;
   };
 
-  const fillMissingTermAlphabet = (sequence) => {
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const fillMissingTermsAlphabet = (sequence, diff) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] === null) {
-        const prevChar = sequence[i - 1].toUpperCase();
-        sequence[i] =
-          alphabet[(alphabet.indexOf(prevChar) + 1) % alphabet.length];
+        const prevCharCode = sequence[i - 1].charCodeAt(0);
+        sequence[i] = String.fromCharCode(prevCharCode + diff);
       }
     }
     return sequence;
@@ -158,9 +166,9 @@ const SolveMissing = ({ sequenceType, goBack }) => {
   };
 
   const placeholder = {
-    arithmetic: "e.g. 2, 5, 8, ..., 11",
-    geometric: "e.g. 3, 9, 27, ..., 81",
-    alphabet: "e.g. A, D, G, ..., J",
+    arithmetic: "e.g. 2, 4, 6, 8, ...",
+    geometric: "e.g. 2, 6, 18, 54, ...",
+    alphabet: "e.g. A, D, G, J, ...",
   }[sequenceType];
 
   return (
@@ -194,6 +202,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
           Solve
         </motion.button>
       </form>
+
       {solvedSequence.length > 0 && (
         <div>
           <h3>Solved Sequence:</h3>
@@ -223,7 +232,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
         transition={{ duration: 0.3 }}
         onClick={goBack}
       >
-        Back to Main Menu
+        Back
       </motion.button>
     </motion.div>
   );
