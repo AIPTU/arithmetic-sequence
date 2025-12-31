@@ -1,10 +1,8 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import { motion } from "framer-motion";
-import React, { useState } from "react";
-import GenerateSequence from "./components/GenerateSequence";
-import SolveMissing from "./components/SolveMissing";
+import React, { useState, Suspense, lazy } from "react";
 import "./index.css";
+
+const GenerateSequence = lazy(() => import("./components/GenerateSequence"));
+const SolveMissing = lazy(() => import("./components/SolveMissing"));
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState(null);
@@ -19,33 +17,28 @@ const App = () => {
     switch (currentPage) {
       case "generate":
         return (
-          <GenerateSequence
-            sequenceType={sequenceType}
-            goBack={() => setCurrentPage(null)}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <GenerateSequence
+              sequenceType={sequenceType}
+              goBack={() => setCurrentPage(null)}
+            />
+          </Suspense>
         );
       case "solve":
         return (
-          <SolveMissing
-            sequenceType={sequenceType}
-            goBack={() => setCurrentPage(null)}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <SolveMissing
+              sequenceType={sequenceType}
+              goBack={() => setCurrentPage(null)}
+            />
+          </Suspense>
         );
       default:
         return (
-          <motion.div
-            className="main-menu"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <motion.h1
-              initial={{ opacity: 0, y: -50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+          <div className="main-menu fade-in">
+            <h1 className="slide-down">
               Urutan Aritmatika
-            </motion.h1>
+            </h1>
             <ButtonGroup>
               <Button
                 type="arithmetic"
@@ -84,7 +77,7 @@ const App = () => {
                 Menyelesaikan Urutan Abjad yang Hilang
               </Button>
             </ButtonGroup>
-          </motion.div>
+          </div>
         );
     }
   };
@@ -100,15 +93,12 @@ const App = () => {
 };
 
 const Button = ({ children, type, onClick }) => (
-  <motion.button
-    whileHover={{ scale: 1.1 }}
-    whileTap={{ scale: 0.9 }}
-    transition={{ duration: 0.3 }}
-    className={`menu-button ${type}`}
+  <button
+    className={`menu-button ${type} button-hover`}
     onClick={onClick}
   >
     {children}
-  </motion.button>
+  </button>
 );
 
 const ButtonGroup = ({ children }) => (

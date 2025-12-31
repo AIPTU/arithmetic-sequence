@@ -1,15 +1,12 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 
-const GenerateSequence = ({ sequenceType, goBack }) => {
+const GenerateSequence = memo(({ sequenceType, goBack }) => {
   const [initialTerm, setInitialTerm] = useState("");
   const [commonDifferenceOrRatio, setCommonDifferenceOrRatio] = useState("");
   const [numberOfTerms, setNumberOfTerms] = useState("");
   const [generatedSequence, setGeneratedSequence] = useState([]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = useCallback((event) => {
     event.preventDefault();
     const sequenceGenerated = generateSequence(
       sequenceType === "alphabet"
@@ -20,9 +17,9 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
       sequenceType
     );
     setGeneratedSequence(sequenceGenerated);
-  };
+  }, [initialTerm, commonDifferenceOrRatio, numberOfTerms, sequenceType]);
 
-  const generateSequence = (
+  const generateSequence = useCallback((
     initialTerm,
     commonDifferenceOrRatio,
     numberOfTerms,
@@ -54,23 +51,18 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
         throw new Error("Tipe urutan tidak diketahui");
     }
     return result;
-  };
+  }, []);
 
-  const handleCopy = () => {
+  const handleCopy = useCallback(() => {
     const text = generatedSequence.join(", ");
     navigator.clipboard
       .writeText(text)
       .then(() => alert("Disalin ke clipboard"))
       .catch((err) => console.error("Gagal menyalin teks: ", err));
-  };
+  }, [generatedSequence]);
 
   return (
-    <motion.div
-      className="sequence-page"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
+    <div className="sequence-page fade-in">
       <motion.h2>{`Buat ${
         sequenceType.charAt(0).toUpperCase() + sequenceType.slice(1)
       } Urutan`}</motion.h2>
@@ -113,47 +105,39 @@ const GenerateSequence = ({ sequenceType, goBack }) => {
           />
         </div>
 
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ duration: 0.3 }}
+        <button
+          className="button-hover"
           type="submit"
         >
           Buat
-        </motion.button>
+        </button>
       </form>
       {generatedSequence.length > 0 && (
         <div>
           <h3>Urutan yang Dihasilkan:</h3>
-          <motion.ul>
+          <ul>
             {generatedSequence.map((num, index) => (
-              <motion.li key={index} whileHover={{ scale: 1.1 }}>
+              <li key={index} className="list-item-hover">
                 {num}
-              </motion.li>
+              </li>
             ))}
-          </motion.ul>
-          <motion.button
-            className="back-button"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ duration: 0.3 }}
+          </ul>
+          <button
+            className="back-button button-hover"
             onClick={handleCopy}
           >
             Salin ke Clipboard
-          </motion.button>
+          </button>
         </div>
       )}
-      <motion.button
-        className="back-button"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        transition={{ duration: 0.3 }}
+      <button
+        className="back-button button-hover"
         onClick={goBack}
       >
         Kembali
-      </motion.button>
-    </motion.div>
+      </button>
+    </div>
   );
-};
+});
 
 export default GenerateSequence;

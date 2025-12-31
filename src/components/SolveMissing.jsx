@@ -1,15 +1,12 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
-import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useState, useCallback, memo } from "react";
 
-const SolveMissing = ({ sequenceType, goBack }) => {
+const SolveMissing = memo(({ sequenceType, goBack }) => {
   const [inputSequence, setInputSequence] = useState("");
   const [solvedSequence, setSolvedSequence] = useState([]);
   const [details, setDetails] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const validateSequence = (sequence, type) => {
+  const validateSequence = useCallback((sequence, type) => {
     const isNumeric = (x) => !isNaN(parseFloat(x)) && isFinite(x);
     const isAlphabetic = (x) => /^[a-zA-Z]+$/.test(x);
 
@@ -27,9 +24,9 @@ const SolveMissing = ({ sequenceType, goBack }) => {
         } yang diizinkan untuk urutan ${type}.`
       );
     }
-  };
+  }, []);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = useCallback((e) => {
     e.preventDefault();
     setErrorMessage("");
     setDetails("");
@@ -55,9 +52,9 @@ const SolveMissing = ({ sequenceType, goBack }) => {
     } catch (error) {
       setErrorMessage(error.message);
     }
-  };
+  }, [inputSequence, sequenceType, validateSequence]);
 
-  const solveSequence = (sequence, type) => {
+  const solveSequence = useCallback((sequence, type) => {
     let solvedSequence = [...sequence];
 
     switch (type) {
@@ -100,54 +97,54 @@ const SolveMissing = ({ sequenceType, goBack }) => {
       default:
         throw new Error("Tipe urutan tidak diketahui.");
     }
-  };
+  }, []);
 
-  const findArithmeticDifference = (sequence) => {
+  const findArithmeticDifference = useCallback((sequence) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] !== null && sequence[i - 1] !== null) {
         return sequence[i] - sequence[i - 1];
       }
     }
     return null;
-  };
+  }, []);
 
-  const fillMissingTermsArithmetic = (sequence, diff) => {
+  const fillMissingTermsArithmetic = useCallback((sequence, diff) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] === null) {
         sequence[i] = parseFloat(sequence[i - 1]) + diff;
       }
     }
     return sequence;
-  };
+  }, []);
 
-  const findGeometricRatio = (sequence) => {
+  const findGeometricRatio = useCallback((sequence) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] !== null && sequence[i - 1] !== null) {
         return sequence[i] / sequence[i - 1];
       }
     }
     return null;
-  };
+  }, []);
 
-  const fillMissingTermsGeometric = (sequence, ratio) => {
+  const fillMissingTermsGeometric = useCallback((sequence, ratio) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] === null) {
         sequence[i] = parseFloat(sequence[i - 1]) * ratio;
       }
     }
     return sequence;
-  };
+  }, []);
 
-  const findAlphabetDifference = (sequence) => {
+  const findAlphabetDifference = useCallback((sequence) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] !== null && sequence[i - 1] !== null) {
         return sequence[i].charCodeAt(0) - sequence[i - 1].charCodeAt(0);
       }
     }
     return null;
-  };
+  }, []);
 
-  const fillMissingTermsAlphabet = (sequence, diff) => {
+  const fillMissingTermsAlphabet = useCallback((sequence, diff) => {
     for (let i = 1; i < sequence.length; i++) {
       if (sequence[i] === null) {
         const prevCharCode = sequence[i - 1].charCodeAt(0);
@@ -155,15 +152,15 @@ const SolveMissing = ({ sequenceType, goBack }) => {
       }
     }
     return sequence;
-  };
+  }, []);
 
-  const handleCopy = () => {
+  const handleCopy = useCallback(() => {
     const text = solvedSequence.join(", ");
     navigator.clipboard
       .writeText(text)
       .then(() => alert("Disalin ke Clipboard"))
       .catch((err) => console.error("Gagal menyalin teks: ", err));
-  };
+  }, [solvedSequence]);
 
   const placeholder = {
     arithmetic: "contoh: 2, 4, 6, 8, ...",
@@ -172,12 +169,7 @@ const SolveMissing = ({ sequenceType, goBack }) => {
   }[sequenceType];
 
   return (
-    <motion.div
-      className="sequence-page"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
+    <div className="sequence-page fade-in">
       <motion.h2>{`Menyelesaikan Urutan ${
         sequenceType.charAt(0).toUpperCase() + sequenceType.slice(1)
       } yang Hilang`}</motion.h2>
@@ -195,49 +187,41 @@ const SolveMissing = ({ sequenceType, goBack }) => {
           />
         </div>
         {errorMessage && <p className="error-message">{errorMessage}</p>}
-        <motion.button
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ duration: 0.3 }}
+        <button
+          className="button-hover"
           type="submit"
         >
           Selesaikan
-        </motion.button>
+        </button>
       </form>
 
       {solvedSequence.length > 0 && (
         <div>
           <h3>Urutan yang Dipecahkan:</h3>
-          <motion.ul>
+          <ul>
             {solvedSequence.map((num, index) => (
-              <motion.li key={index} whileHover={{ scale: 1.1 }}>
+              <li key={index} className="list-item-hover">
                 {num}
-              </motion.li>
+              </li>
             ))}
-          </motion.ul>
+          </ul>
           <p>{details}</p>
-          <motion.button
-            className="back-button"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            transition={{ duration: 0.3 }}
+          <button
+            className="back-button button-hover"
             onClick={handleCopy}
           >
             Salin ke Clipboard
-          </motion.button>
+          </button>
         </div>
       )}
-      <motion.button
-        className="back-button"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        transition={{ duration: 0.3 }}
+      <button
+        className="back-button button-hover"
         onClick={goBack}
       >
         Kembali
-      </motion.button>
-    </motion.div>
+      </button>
+    </div>
   );
-};
+});
 
 export default SolveMissing;
