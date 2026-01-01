@@ -1,19 +1,19 @@
-# Urutan Aritmatika
+# Arithmetic Sequence
 
-Sebuah aplikasi web untuk membuat dan menyelesaikan urutan aritmatika.
+A web application for generating and solving arithmetic sequences.
 
-## Fitur
+## Features
 
-- Membuat urutan aritmatika
-- Menyelesaikan urutan aritmatika yang hilang
+- Generate arithmetic sequences
+- Solve missing arithmetic sequences
 
-## Teknologi
+## Technology
 
 - React
 - Framer Motion
 - Vite
 
-## Kredit
+## Credits
 
 - Icon: [Icons8](https://icons8.com)
 - Background: [Freepik](https://img.freepik.com)

@@ -19,9 +19,9 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
 
     if (hasInvalidNumber || hasInvalidLetter) {
       throw new Error(
-        `Masukan tidak valid: Hanya ${
-          type === "alphabet" ? "huruf" : "angka"
-        } yang diizinkan untuk urutan ${type}.`
+        `Invalid input: Only ${
+          type === "alphabet" ? "letters" : "numbers"
+        } are allowed for ${type} sequence.`
       );
     }
   }, []);
@@ -38,7 +38,7 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
         .map((x) => (x.trim() === "..." ? null : x.trim()));
 
       if (inputArray.length < 2) {
-        throw new Error("Masukan urutan harus memiliki setidaknya dua urutan.");
+        throw new Error("Sequence input must have at least two terms.");
       }
 
       validateSequence(inputArray, sequenceType);
@@ -61,41 +61,41 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
       case "arithmetic": {
         const diff = findArithmeticDifference(solvedSequence);
         if (diff === null) {
-          throw new Error("Tidak dapat menemukan selisih yang umum.");
+          throw new Error("Cannot find common difference.");
         }
         solvedSequence = fillMissingTermsArithmetic(solvedSequence, diff);
         return {
           solvedArray: solvedSequence,
-          details: `Selisih yang umum adalah ${diff}.`,
+          details: `The common difference is ${diff}.`,
         };
       }
 
       case "geometric": {
         const ratio = findGeometricRatio(solvedSequence);
         if (ratio === null) {
-          throw new Error("Tidak dapat menemukan rasio yang umum.");
+          throw new Error("Cannot find common ratio.");
         }
         solvedSequence = fillMissingTermsGeometric(solvedSequence, ratio);
         return {
           solvedArray: solvedSequence,
-          details: `Rasio yang umum adalah ${ratio}.`,
+          details: `The common ratio is ${ratio}.`,
         };
       }
 
       case "alphabet": {
         const diff = findAlphabetDifference(solvedSequence);
         if (diff === null) {
-          throw new Error("Tidak dapat menemukan perbedaan huruf yang umum.");
+          throw new Error("Cannot find common letter difference.");
         }
         solvedSequence = fillMissingTermsAlphabet(solvedSequence, diff);
         return {
           solvedArray: solvedSequence,
-          details: `Perbedaan huruf yang umum adalah ${diff}.`,
+          details: `The common letter difference is ${diff}.`,
         };
       }
 
       default:
-        throw new Error("Tipe urutan tidak diketahui.");
+        throw new Error("Unknown sequence type.");
     }
   }, []);
 
@@ -158,25 +158,25 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
     const text = solvedSequence.join(", ");
     navigator.clipboard
       .writeText(text)
-      .then(() => alert("Disalin ke Clipboard"))
-      .catch((err) => console.error("Gagal menyalin teks: ", err));
+      .then(() => alert("Copied to Clipboard"))
+      .catch((err) => console.error("Failed to copy text: ", err));
   }, [solvedSequence]);
 
   const placeholder = {
-    arithmetic: "contoh: 2, 4, 6, 8, ...",
-    geometric: "contoh: 2, 6, 18, 54, ...",
-    alphabet: "contoh: A, D, G, J, ...",
+    arithmetic: "e.g.: 2, 4, 6, 8, ...",
+    geometric: "e.g.: 2, 6, 18, 54, ...",
+    alphabet: "e.g.: A, D, G, J, ...",
   }[sequenceType];
 
   return (
     <div className="sequence-page fade-in">
-      <motion.h2>{`Menyelesaikan Urutan ${
+      <motion.h2>{`Solve Missing ${
         sequenceType.charAt(0).toUpperCase() + sequenceType.slice(1)
-      } yang Hilang`}</motion.h2>
+      } Sequence`}</motion.h2>
       <form onSubmit={handleSubmit} className="sequence-form">
         <div>
           <label>
-            Masukkan urutan (gunakan &quot;...&quot; untuk urutan yang hilang):
+            Enter sequence (use &quot;...&quot; for missing terms):
           </label>
           <input
             type="text"
@@ -191,13 +191,13 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
           className="button-hover"
           type="submit"
         >
-          Selesaikan
+          Solve
         </button>
       </form>
 
       {solvedSequence.length > 0 && (
         <div>
-          <h3>Urutan yang Dipecahkan:</h3>
+          <h3>Solved Sequence:</h3>
           <ul>
             {solvedSequence.map((num, index) => (
               <li key={index} className="list-item-hover">
@@ -210,7 +210,7 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
             className="back-button button-hover"
             onClick={handleCopy}
           >
-            Salin ke Clipboard
+            Copy to Clipboard
           </button>
         </div>
       )}
@@ -218,7 +218,7 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
         className="back-button button-hover"
         onClick={goBack}
       >
-        Kembali
+        Back
       </button>
     </div>
   );

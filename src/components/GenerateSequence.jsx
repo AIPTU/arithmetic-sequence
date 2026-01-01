@@ -48,7 +48,7 @@ const GenerateSequence = memo(({ sequenceType, goBack }) => {
         break;
       }
       default:
-        throw new Error("Tipe urutan tidak diketahui");
+        throw new Error("Unknown sequence type");
     }
     return result;
   }, []);
@@ -57,51 +57,51 @@ const GenerateSequence = memo(({ sequenceType, goBack }) => {
     const text = generatedSequence.join(", ");
     navigator.clipboard
       .writeText(text)
-      .then(() => alert("Disalin ke clipboard"))
-      .catch((err) => console.error("Gagal menyalin teks: ", err));
+      .then(() => alert("Copied to clipboard"))
+      .catch((err) => console.error("Failed to copy text: ", err));
   }, [generatedSequence]);
 
   return (
     <div className="sequence-page fade-in">
-      <motion.h2>{`Buat ${
+      <motion.h2>{`Generate ${
         sequenceType.charAt(0).toUpperCase() + sequenceType.slice(1)
-      } Urutan`}</motion.h2>
+      } Sequence`}</motion.h2>
       <form onSubmit={handleSubmit} className="sequence-form">
         <div>
-          <label>Suku Awal:</label>
+          <label>Initial Term:</label>
           <input
             type={sequenceType === "alphabet" ? "text" : "number"}
             value={initialTerm}
             onChange={(event) => setInitialTerm(event.target.value)}
             required
-            placeholder={sequenceType === "alphabet" ? "contoh: A" : "contoh: 1"}
+            placeholder={sequenceType === "alphabet" ? "e.g.: A" : "e.g.: 1"}
           />
         </div>
 
         <div>
           <label>
             {sequenceType === "arithmetic"
-              ? "Selisih Umum"
+              ? "Common Difference"
               : sequenceType === "geometric"
-              ? "Rasio Umum"
-              : "Langkah"}
+              ? "Common Ratio"
+              : "Step"}
           </label>
           <input
             type="number"
             value={commonDifferenceOrRatio}
             onChange={(event) => setCommonDifferenceOrRatio(event.target.value)}
             required
-            placeholder="contoh: 2"
+            placeholder="e.g.: 2"
           />
         </div>
         <div>
-          <label>Jumlah Suku:</label>
+          <label>Number of Terms:</label>
           <input
             type="number"
             value={numberOfTerms}
             onChange={(event) => setNumberOfTerms(event.target.value)}
             required
-            placeholder="contoh: 5"
+            placeholder="e.g.: 5"
           />
         </div>
 
@@ -109,12 +109,12 @@ const GenerateSequence = memo(({ sequenceType, goBack }) => {
           className="button-hover"
           type="submit"
         >
-          Buat
+          Generate
         </button>
       </form>
       {generatedSequence.length > 0 && (
         <div>
-          <h3>Urutan yang Dihasilkan:</h3>
+          <h3>Generated Sequence:</h3>
           <ul>
             {generatedSequence.map((num, index) => (
               <li key={index} className="list-item-hover">
@@ -126,7 +126,7 @@ const GenerateSequence = memo(({ sequenceType, goBack }) => {
             className="back-button button-hover"
             onClick={handleCopy}
           >
-            Salin ke Clipboard
+            Copy to Clipboard
           </button>
         </div>
       )}
@@ -134,7 +134,7 @@ const GenerateSequence = memo(({ sequenceType, goBack }) => {
         className="back-button button-hover"
         onClick={goBack}
       >
-        Kembali
+        Back
       </button>
     </div>
   );

@@ -37,44 +37,44 @@ const App = () => {
         return (
           <div className="main-menu fade-in">
             <h1 className="slide-down">
-              Urutan Aritmatika
+              Arithmetic Sequence
             </h1>
             <ButtonGroup>
               <Button
                 type="arithmetic"
                 onClick={() => handleNavigation("generate", "arithmetic")}
               >
-                Membuat Urutan Aritmatika
+                Generate Arithmetic Sequence
               </Button>
               <Button
                 type="arithmetic"
                 onClick={() => handleNavigation("solve", "arithmetic")}
               >
-                Menyelesaikan Urutan Aritmatika yang Hilang
+                Solve Missing Arithmetic Sequence
               </Button>
               <Button
                 type="geometric"
                 onClick={() => handleNavigation("generate", "geometric")}
               >
-                Membuat Urutan Geometri
+                Generate Geometric Sequence
               </Button>
               <Button
                 type="geometric"
                 onClick={() => handleNavigation("solve", "geometric")}
               >
-                Menyelesaikan Urutan Geometri yang Hilang
+                Solve Missing Geometric Sequence
               </Button>
               <Button
                 type="alphabet"
                 onClick={() => handleNavigation("generate", "alphabet")}
               >
-                Membuat Urutan Abjad
+                Generate Alphabet Sequence
               </Button>
               <Button
                 type="alphabet"
                 onClick={() => handleNavigation("solve", "alphabet")}
               >
-                Menyelesaikan Urutan Abjad yang Hilang
+                Solve Missing Alphabet Sequence
               </Button>
             </ButtonGroup>
           </div>
