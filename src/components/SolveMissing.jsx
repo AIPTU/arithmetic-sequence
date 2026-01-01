@@ -1,4 +1,6 @@
-import React, { useState, useCallback, memo } from "react";
+import { useState, useCallback, memo } from "react";
+import { motion } from "framer-motion";
+import PropTypes from "prop-types";
 
 const SolveMissing = memo(({ sequenceType, goBack }) => {
   const [inputSequence, setInputSequence] = useState("");
@@ -52,7 +54,7 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
     } catch (error) {
       setErrorMessage(error.message);
     }
-  }, [inputSequence, sequenceType, validateSequence]);
+  }, [inputSequence, sequenceType, validateSequence, solveSequence]);
 
   const solveSequence = useCallback((sequence, type) => {
     let solvedSequence = [...sequence];
@@ -97,7 +99,7 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
       default:
         throw new Error("Unknown sequence type.");
     }
-  }, []);
+  }, [fillMissingTermsAlphabet, fillMissingTermsArithmetic, fillMissingTermsGeometric, findAlphabetDifference, findArithmeticDifference, findGeometricRatio]);
 
   const findArithmeticDifference = useCallback((sequence) => {
     for (let i = 1; i < sequence.length; i++) {
@@ -223,5 +225,12 @@ const SolveMissing = memo(({ sequenceType, goBack }) => {
     </div>
   );
 });
+
+SolveMissing.displayName = "SolveMissing";
+
+SolveMissing.propTypes = {
+  sequenceType: PropTypes.string.isRequired,
+  goBack: PropTypes.func.isRequired,
+};
 
 export default SolveMissing;

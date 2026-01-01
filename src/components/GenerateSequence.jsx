@@ -1,4 +1,6 @@
-import React, { useState, useCallback, memo } from "react";
+import { useState, useCallback, memo } from "react";
+import { motion } from "framer-motion";
+import PropTypes from "prop-types";
 
 const GenerateSequence = memo(({ sequenceType, goBack }) => {
   const [initialTerm, setInitialTerm] = useState("");
@@ -17,7 +19,7 @@ const GenerateSequence = memo(({ sequenceType, goBack }) => {
       sequenceType
     );
     setGeneratedSequence(sequenceGenerated);
-  }, [initialTerm, commonDifferenceOrRatio, numberOfTerms, sequenceType]);
+  }, [initialTerm, commonDifferenceOrRatio, numberOfTerms, sequenceType, generateSequence]);
 
   const generateSequence = useCallback((
     initialTerm,
@@ -139,5 +141,12 @@ const GenerateSequence = memo(({ sequenceType, goBack }) => {
     </div>
   );
 });
+
+GenerateSequence.displayName = "GenerateSequence";
+
+GenerateSequence.propTypes = {
+  sequenceType: PropTypes.string.isRequired,
+  goBack: PropTypes.func.isRequired,
+};
 
 export default GenerateSequence;

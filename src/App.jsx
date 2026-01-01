@@ -1,4 +1,5 @@
-import React, { useState, Suspense, lazy } from "react";
+import { useState, Suspense, lazy } from "react";
+import PropTypes from "prop-types";
 import "./index.css";
 
 const GenerateSequence = lazy(() => import("./components/GenerateSequence"));
@@ -101,8 +102,18 @@ const Button = ({ children, type, onClick }) => (
   </button>
 );
 
+Button.propTypes = {
+  children: PropTypes.node.isRequired,
+  type: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
+};
+
 const ButtonGroup = ({ children }) => (
   <div className="button-group">{children}</div>
 );
+
+ButtonGroup.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export default App;
