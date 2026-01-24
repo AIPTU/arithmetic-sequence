@@ -6,6 +6,7 @@ import { SequenceType } from "../types/sequence";
 import { solveSequence, validateSequence } from "../utils/sequenceCalculations";
 import Button from "./Button";
 import Card from "./Card";
+import { TbPuzzle, TbCopy, TbArrowLeft, TbHelp } from "react-icons/tb";
 
 interface SolveMissingProps {
   sequenceType: SequenceType;
@@ -67,13 +68,18 @@ export default function SolveMissing({
   };
 
   const inputClasses =
-    "w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all";
+    "w-full px-10 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all hover:bg-white/10 text-lg";
 
   return (
     <div className="mx-auto w-full max-w-2xl space-y-8">
-      <div className="mb-8 flex items-center justify-between">
-        <Button onClick={goBack} variant="secondary" className="px-4!">
-          ← Back
+      <div className="flex items-center justify-between">
+        <Button
+          onClick={goBack}
+          variant="secondary"
+          size="sm"
+          icon={<TbArrowLeft />}
+        >
+          Back
         </Button>
         <motion.h2
           className="text-center text-2xl font-bold md:text-3xl"
@@ -81,35 +87,44 @@ export default function SolveMissing({
           animate={{ opacity: 1, y: 0 }}
         >
           Solve{" "}
-          <span className={`text-seq-${sequenceType}`}>
+          <span className={`text-seq-${sequenceType} text-glow`}>
             {sequenceType.charAt(0).toUpperCase() + sequenceType.slice(1)}
           </span>{" "}
           Sequence
         </motion.h2>
-        <div className="w-22" />
+        <div className="w-[88px]" />
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-white/80">
+        <div className="space-y-3">
+          <label className="ml-1 block text-sm font-medium text-white/80">
             Enter sequence (use &quot;...&quot; for missing terms):
           </label>
-          <input
-            type="text"
-            value={inputSequence}
-            onChange={(e) => setInputSequence(e.target.value)}
-            required
-            placeholder={placeholders[sequenceType]}
-            className={inputClasses}
-          />
+          <div className="relative">
+            <TbPuzzle className="absolute top-1/2 left-3 -translate-y-1/2 text-xl text-white/40" />
+            <input
+              type="text"
+              value={inputSequence}
+              onChange={(e) => setInputSequence(e.target.value)}
+              required
+              placeholder={placeholders[sequenceType]}
+              className={inputClasses}
+            />
+          </div>
+          <p className="ml-1 text-xs text-white/50">
+            Tip: Enter at least two known terms to solve the sequence.
+          </p>
         </div>
 
         {errorMessage && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
-            className="rounded-lg border border-red-500/50 bg-red-500/10 p-4 text-sm text-red-200"
+            className="flex items-center gap-3 rounded-xl border border-red-500/50 bg-red-500/10 p-4 text-sm text-red-200 backdrop-blur-sm"
           >
+            <div className="rounded-full bg-red-500/20 p-1">
+              <TbHelp className="text-xl" />
+            </div>
             {errorMessage}
           </motion.div>
         )}
@@ -118,7 +133,8 @@ export default function SolveMissing({
           type="submit"
           variant={sequenceType}
           fullWidth
-          className="text-lg"
+          size="lg"
+          className="shadow-xl"
         >
           Solve Sequence
         </Button>
@@ -129,33 +145,38 @@ export default function SolveMissing({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Card className="space-y-4 border-white/5 bg-black/20">
-            <div className="mb-4 flex items-center justify-between">
+          <Card
+            className="space-y-6 border-white/10 bg-black/40 backdrop-blur-md"
+            hoverEffect
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <h3 className="text-xl font-bold text-white/90">Results</h3>
               <Button
                 onClick={handleCopy}
                 variant="secondary"
-                className="px-3 py-1 text-xs"
+                size="sm"
+                icon={<TbCopy />}
               >
                 Copy
               </Button>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap justify-center gap-3">
               {solvedSequence.map((value, index) => (
                 <motion.div
                   key={index}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
-                  className={`bg-seq-${sequenceType} bg-opacity-20 border border-seq-${sequenceType}/30 min-w-12 rounded-lg px-4 py-2 text-center font-mono text-lg font-bold`}
+                  transition={{ delay: index * 0.05, type: "spring" }}
+                  whileHover={{ scale: 1.1, translateY: -2 }}
+                  className={`bg-seq-${sequenceType}/20 border border-seq-${sequenceType}/30 min-w-[60px] rounded-xl px-4 py-3 text-center font-mono text-xl font-bold shadow-lg backdrop-blur-sm`}
                 >
                   {value}
                 </motion.div>
               ))}
             </div>
             {details && (
-              <div className="mt-4 border-t border-white/10 pt-4 text-center text-sm text-white/70">
+              <div className="mt-4 rounded-lg border border-white/5 bg-white/5 p-4 text-center text-sm text-white/70">
                 {details}
               </div>
             )}

@@ -1,6 +1,15 @@
 "use client";
 
 import { useState, lazy, Suspense } from "react";
+import { FaGithub } from "react-icons/fa";
+import {
+  TbMath,
+  TbChartDots,
+  TbAbc,
+  TbMathSymbols,
+  TbQuestionMark,
+  TbAlphabetGreek,
+} from "react-icons/tb";
 import { motion, AnimatePresence } from "framer-motion";
 import { SequenceType } from "./types/sequence";
 import Button from "./components/Button";
@@ -24,7 +33,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
+    <div className="flex min-h-screen flex-col items-center justify-center p-4 md:p-8">
       <AnimatePresence mode="wait">
         {!currentPage ? (
           <motion.div
@@ -32,8 +41,8 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="w-full max-w-4xl"
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="w-full max-w-5xl"
           >
             <MainMenu onNavigate={handleNavigation} />
           </motion.div>
@@ -46,7 +55,7 @@ export default function Home() {
             transition={{ duration: 0.3 }}
             className="w-full max-w-4xl"
           >
-            <Card className="p-8">
+            <Card className="border-white/10 bg-black/40 p-8 shadow-2xl backdrop-blur-xl">
               <Suspense fallback={<LoadingSpinner />}>
                 {currentPage === "generate" ? (
                   <GenerateSequence
@@ -65,7 +74,18 @@ export default function Home() {
         )}
       </AnimatePresence>
 
-      <footer className="mt-8 text-sm font-medium text-white/60">
+      <footer className="mt-12 text-sm font-medium text-white/40">
+        <div className="mb-3 flex items-center justify-center gap-4">
+          <a
+            href="https://github.com/AIPTU/arithmetic-sequence"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 transition-colors hover:text-white"
+          >
+            <FaGithub className="text-xl" />
+            <span>View on GitHub</span>
+          </a>
+        </div>
         &copy; {new Date().getFullYear()} AIPTU. All rights reserved.
       </footer>
     </div>
@@ -74,8 +94,11 @@ export default function Home() {
 
 function LoadingSpinner() {
   return (
-    <div className="flex min-h-100 items-center justify-center">
-      <div className="border-primary h-16 w-16 animate-spin rounded-full border-t-4 border-b-4"></div>
+    <div className="flex min-h-[400px] items-center justify-center">
+      <div className="relative h-16 w-16">
+        <div className="bg-primary/20 absolute inset-0 animate-ping rounded-full"></div>
+        <div className="border-primary shadow-primary/50 relative h-16 w-16 animate-spin rounded-full border-t-4 border-b-4 shadow-lg"></div>
+      </div>
     </div>
   );
 }
@@ -85,55 +108,89 @@ interface MainMenuProps {
 }
 
 function MainMenu({ onNavigate }: MainMenuProps) {
-  const menuItems: Array<{
-    type: SequenceType;
-    page: PageType;
-    label: string;
-  }> = [
+  const menuItems = [
     {
-      type: "arithmetic",
-      page: "generate",
-      label: "Generate Arithmetic Sequence",
+      type: "arithmetic" as SequenceType,
+      page: "generate" as PageType,
+      label: "Generate Arithmetic",
+      desc: "Create number sequences with a constant difference",
+      icon: <TbMath />,
     },
     {
-      type: "arithmetic",
-      page: "solve",
-      label: "Solve Missing Arithmetic Sequence",
+      type: "arithmetic" as SequenceType,
+      page: "solve" as PageType,
+      label: "Solve Arithmetic",
+      desc: "Find missing terms in arithmetic progressions",
+      icon: <TbMathSymbols />,
     },
     {
-      type: "geometric",
-      page: "generate",
-      label: "Generate Geometric Sequence",
+      type: "geometric" as SequenceType,
+      page: "generate" as PageType,
+      label: "Generate Geometric",
+      desc: "Create sequences with a constant ratio",
+      icon: <TbChartDots />,
     },
     {
-      type: "geometric",
-      page: "solve",
-      label: "Solve Missing Geometric Sequence",
+      type: "geometric" as SequenceType,
+      page: "solve" as PageType,
+      label: "Solve Geometric",
+      desc: "Find missing terms in geometric progressions",
+      icon: <TbQuestionMark />,
     },
-    { type: "alphabet", page: "generate", label: "Generate Alphabet Sequence" },
     {
-      type: "alphabet",
-      page: "solve",
-      label: "Solve Missing Alphabet Sequence",
+      type: "alphabet" as SequenceType,
+      page: "generate" as PageType,
+      label: "Generate Alphabet",
+      desc: "Create patterns using letters",
+      icon: <TbAbc />,
+    },
+    {
+      type: "alphabet" as SequenceType,
+      page: "solve" as PageType,
+      label: "Solve Alphabet",
+      desc: "Find missing letters in a sequence",
+      icon: <TbAlphabetGreek />,
     },
   ];
 
   return (
-    <Card className="p-8 md:p-12">
-      <h1 className="mb-12 bg-linear-to-r from-white to-white/70 bg-clip-text text-center text-4xl font-black text-transparent md:text-6xl">
-        Arithmetic Sequence
-      </h1>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <Card className="relative overflow-hidden border-white/10 bg-black/30 p-8 shadow-2xl backdrop-blur-md md:p-12">
+      <div className="relative z-10 mb-12 text-center">
+        <h1 className="mb-4 bg-linear-to-r from-white via-white to-white/60 bg-clip-text text-5xl font-black text-transparent drop-shadow-2xl md:text-7xl">
+          Arithmetic Sequence
+        </h1>
+        <p className="mx-auto max-w-2xl text-lg text-white/50">
+          Explore the beauty of mathematical patterns. Generate complicated
+          sequences or solve for missing terms with ease.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 md:gap-6">
         {menuItems.map((item, index) => (
-          <Button
+          <motion.div
             key={index}
-            variant={item.type}
-            onClick={() => onNavigate(item.page, item.type)}
-            fullWidth
-            className="h-16 text-lg shadow-md"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
           >
-            {item.label}
-          </Button>
+            <Button
+              variant={item.type}
+              onClick={() => onNavigate(item.page, item.type)}
+              fullWidth
+              size="lg"
+              className="group flex h-full flex-col items-center justify-center gap-3 border border-white/5 py-8 text-center hover:border-white/20"
+            >
+              <span className="mb-2 text-4xl opacity-80 transition-transform duration-300 group-hover:scale-110">
+                {item.icon}
+              </span>
+              <div className="flex flex-col gap-1">
+                <span className="text-xl font-bold">{item.label}</span>
+                <span className="mx-auto max-w-[200px] text-xs leading-relaxed font-normal opacity-70">
+                  {item.desc}
+                </span>
+              </div>
+            </Button>
+          </motion.div>
         ))}
       </div>
     </Card>

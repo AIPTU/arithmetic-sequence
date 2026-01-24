@@ -13,7 +13,6 @@
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
 
-  /* Specific Sequence Colors */
   --color-seq-arithmetic: var(--arithmetic);
   --color-seq-geometric: var(--geometric);
   --color-seq-alphabet: var(--alphabet);
@@ -23,48 +22,111 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+
+  @keyframes aurora {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 50% 50%;
+    }
+  }
 }
 
 :root {
-  --background: #09090b;
-  --foreground: #fafafa;
+  --background: #0f172a;
+  --foreground: #f8fafc;
 
-  --primary: #f97316;
-  --primary-foreground: #fafafa;
+  --primary: #f59e0b;
+  --primary-foreground: #ffffff;
 
-  --secondary: #27272a;
-  --secondary-foreground: #fafafa;
+  --secondary: #1e293b;
+  --secondary-foreground: #f8fafc;
 
-  --card: rgba(255, 255, 255, 0.1);
-  --card-foreground: #fafafa;
+  --card: rgba(30, 41, 59, 0.4);
+  --card-foreground: #f8fafc;
 
   --arithmetic: #3b82f6;
-  --geometric: #a855f7;
-  --alphabet: #22c55e;
+  --geometric: #8b5cf6;
+  --alphabet: #10b981;
 
-  --radius: 0.75rem;
+  --radius: 1rem;
 }
 
 body {
   font-family: var(--font-sans);
+  background-color: var(--background);
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
-    url("https://img.freepik.com/free-photo/stationery-with-apple-calculator-blackboard_23-2148199923.jpg");
-  background-size: cover;
-  background-position: center;
+    radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+    radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(16, 185, 129, 0.15), transparent 50%),
+    radial-gradient(at 100% 50%, rgba(139, 92, 246, 0.15), transparent 50%),
+    radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.2), transparent 50%);
+  background-size: 180% 180%;
+  animation: aurora 15s ease infinite alternate;
   background-attachment: fixed;
-  background-repeat: no-repeat;
   min-height: 100vh;
   color: var(--foreground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 @layer utilities {
   .glass {
-    background: var(--card);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .glass-hover {
+    transition: all 0.3s ease;
+  }
+
+  .glass-hover:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
   }
 }
